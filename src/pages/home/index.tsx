@@ -2,9 +2,10 @@ import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
 import { Input } from "../../components/input";
 import { MaterialIcons } from "@expo/vector-icons"
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Marker } from "../../components/marker";
 import { Flag } from "../../components/flag";
+import { AuthContextList } from "../../context/authContextList";
 
 const getGreeting = () => {
 
@@ -28,26 +29,12 @@ type PropCard = {
     priority:'Baixa' | 'Media' | 'Alta'
 }
 
-const data:Array<PropCard> =
-[
-    {
-        item: 0,
-        title: 'Realizar lição de casa',
-        description: 'Exercicios 9 e 10 da apostila de English',
-        priority: 'Baixa'
-    },
-    {
-        item: 1,
-        title: 'Fazer compras',
-        description: 'Lista de compras: 1 - Açucar, 2 - Leite',
-        priority: 'Baixa'
-    }
-]
-
 export default function Home () {
 
     const [greeting, setGreeting] = useState(getGreeting())
     const user = 'Lucas Santana'
+    
+    const { taskList } = useContext<AuthContextType>(AuthContextList)
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -91,7 +78,7 @@ export default function Home () {
             </View>
             <View style={styles.boxListTask}>
                 <FlatList
-                    data={data}
+                    data={taskList}
                     style={styles.flatList}
                     keyExtractor={(item, index) => item.item.toString()}
                     renderItem={({item, index}) => {return(renderCard(item))}}
