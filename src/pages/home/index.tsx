@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { Marker } from "../../components/marker";
 import { Flag } from "../../components/flag";
 import { AuthContextList } from "../../context/authContextList";
+import { AuthContextType } from "../../global/props";
 
 const getGreeting = () => {
 

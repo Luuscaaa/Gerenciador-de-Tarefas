@@ -1,11 +1,11 @@
-interface AuthContextType{
+export interface AuthContextType{
     taskList: Array<PropCard>,
     onOpen: void,
-    handleEdit: Function,
-    handleDelete: Function
+    // handleEdit: Function,
+    // handleDelete: Function
 }
 
-type PropCard = {
+export type PropCard = {
     description: string,
     priority: PropPriority,
     item: number,
@@ -13,4 +13,4 @@ type PropCard = {
     title: string
 }
 
-type PropPriority = 'Baixa' | 'Media' | 'Alta'
+export type PropPriority = 'Baixa' | 'Media' | 'Alta'
