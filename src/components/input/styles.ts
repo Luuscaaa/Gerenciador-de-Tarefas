@@ -12,13 +12,13 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 10,
         backgroundColor: themas.color.bgInput,
-        borderColor: themas.color.lightGray,
+        borderColor: themas.color.gray,
         paddingHorizontal: 10
     },
     input:{
         height: '100%',
         width: '90%',
-        paddingHorizontal: 10,
+        paddingVertical: 10
     },
     titleInput:{
         marginLeft: 5,

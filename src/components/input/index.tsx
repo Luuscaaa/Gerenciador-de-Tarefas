@@ -6,6 +6,8 @@ import {
   View,
   Pressable,
   TouchableOpacity,
+  StyleProp,
+  TextStyle,
 } from 'react-native';
 import { styles } from '../input/styles';
 import { themas } from '../../global/themes';
@@ -24,11 +26,13 @@ type Props = TextInputProps & {
   title?: string;
   onIconLeftPress?: () => void;
   onIconRightPress?: () => void;
+  height?: number;
+  labelStyle?: StyleProp<TextStyle>
 };
 
 export const Input = forwardRef<TextInput, Props>((Props, ref: Ref<TextInput>) => {
 
-    const {IconLeft, IconRight, iconLeftName, iconRightName, title, onIconLeftPress, onIconRightPress, ...rest} = Props
+    const {IconLeft, IconRight, iconLeftName, iconRightName, title, onIconLeftPress, onIconRightPress, labelStyle, height, ...rest} = Props
 
     const calculateSizeWidth = () => {
       if(IconLeft && IconRight){
@@ -42,8 +46,8 @@ export const Input = forwardRef<TextInput, Props>((Props, ref: Ref<TextInput>) =
 
     return(
       <View>
-        {title && <Text style={styles.titleInput}>{title}</Text>}
-        <View style={styles.boxInput}>
+        {title && <Text style={[styles.titleInput, labelStyle]}>{title}</Text>}
+        <View style={[styles.boxInput, {height:height || 45}]}>
           {IconLeft && iconLeftName && (
             <TouchableOpacity onPress={onIconLeftPress}>
               <IconLeft
@@ -57,10 +61,10 @@ export const Input = forwardRef<TextInput, Props>((Props, ref: Ref<TextInput>) =
 
           <TextInput
             style={[
-              styles.input,{width:calculateSizeWidth()}
+              styles.input,
+              { width: calculateSizeWidth() },
             ]}
             ref={ref}
-            placeholder={rest.placeholder}
             {...rest}
           />
 
