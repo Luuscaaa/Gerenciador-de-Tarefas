@@ -35,7 +35,7 @@ export default function CustomDateTimePicker({ type, onDateChange, show, setShow
   return (
     <Modal transparent={true} visible={show} animationType="slide">
       <View style={styles.modalOverlay}>
-        <View style={styles.container}>S
+        <View style={styles.container}>
             <DateTimePicker
                 value={tempDate}
                 mode={type}

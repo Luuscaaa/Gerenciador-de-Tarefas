@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { Dimensions, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Dimensions, Text, TouchableOpacity, View } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { styles } from "./styles";
 import { FontAwesome } from "@expo/vector-icons";
@@ -7,6 +7,7 @@ import { themas } from "../global/themes";
 import { Input } from "../components/input";
 import { Flag } from "../components/flag";
 import CustomDateTimePicker from "../components/customDateTimePicker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export const AuthContextList:any = createContext({})
@@ -37,6 +38,8 @@ export const AuthProviderList = (props:any) : any => {
     const [selectedTime, setSelectedTime] = useState(new Date())
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false)
     const [showTimePicker, setShowTimePicker] = useState<boolean>(false)
+    const [item, setItem] = useState(0)
+    const [taskList, setTaskList] = useState([])
 
     const onOpen = () => {
         modalizeRef.current?.open()
@@ -46,17 +49,23 @@ export const AuthProviderList = (props:any) : any => {
         modalizeRef.current?.close()
     }
 
-    useEffect(() => {
-        onOpen()
-    }, [])
+    // useEffect(() => {
+    //     onOpen()
+    // }, [])
 
     const renderPriorities = () => {
         return(
             priorities.map((item, index) => (
-                <TouchableOpacity key={index}>
+                <TouchableOpacity 
+                    key={index}
+                    onPress={() => {
+                        setSelectedPriority(item.priority)
+                    }}    
+                >
                     <Flag
                         priority={item.priority}
                         color={item.color}
+                        selected={item.priority === selectedPriority}
                     />
                 </TouchableOpacity>
             ))
@@ -71,6 +80,53 @@ export const AuthProviderList = (props:any) : any => {
         setSelectedTime(date)
     }
 
+        const handleSave = async () => {
+            if( !title || !description || !selectedPriority){
+                return Alert.alert('Atenção!', '\nPreencha todos os campos.')
+            }
+            try {
+                const newItem = {
+                    item: Date.now(),
+                    title,
+                    description,
+                    flags: selectedPriority,
+                    timeLimit: new Date(
+                        selectedDate.getFullYear(),
+                        selectedDate.getMonth(),
+                        selectedDate.getDay(),
+                        selectedTime.getHours(),
+                        selectedTime.getMinutes(),
+                    ).toISOString()
+                }
+
+                const storageData = await AsyncStorage.getItem('taskList')
+
+                console.log(storageData)
+                
+                let taskList = storageData ? JSON.parse(storageData):[]
+
+                taskList.push(newItem)
+
+                await AsyncStorage.setItem('taskList', JSON.stringify(taskList))
+
+                setTaskList(taskList)
+                setData()
+                onClose()
+
+            } catch (error) {
+                console.log("Erro ao salvar o item.", error)
+            }
+        }
+
+    const setData = () => {
+        setTitle('')
+        setDescription('')
+        setSelectedPriority('Baixa')
+        setItem(0)
+        setSelectedDate(new Date())
+        setSelectedTime(new Date())
+    }
+
     const container = () => {
         return(
             <View style={styles.container}>
@@ -83,7 +139,7 @@ export const AuthProviderList = (props:any) : any => {
                         />
                     </TouchableOpacity>
                     <Text style={styles.title}> Criar Tarefas </Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleSave()}>
                         <FontAwesome
                             name="check"
                             size={30}
@@ -150,7 +206,7 @@ export const AuthProviderList = (props:any) : any => {
     }
 
     return(
-        <AuthContextList.Provider value={{onOpen}}>
+        <AuthContextList.Provider value={{onOpen, taskList}}>
             {props.children}
             <Modalize 
                 ref={modalizeRef}

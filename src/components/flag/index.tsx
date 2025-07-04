@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity } from "react-native"
+import { Text, TouchableOpacity, View } from "react-native"
 import { styles } from "./styles"
 import { themas } from "../../global/themes"
 
@@ -11,7 +11,7 @@ type Props = {
 
 export function Flag ({...rest}:Props) {
     return(
-        <TouchableOpacity 
+        <View 
             style={[
                 styles.container, 
                 {backgroundColor:rest?.color},
@@ -19,6 +19,6 @@ export function Flag ({...rest}:Props) {
             ]}
         >
             <Text style={styles.text}>{rest.priority}</Text>
-        </TouchableOpacity>
+        </View>
     )
 }
